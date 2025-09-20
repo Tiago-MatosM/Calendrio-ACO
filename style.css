@@ -1,0 +1,119 @@
+/* --- ESTILOS GERAIS DA PÁGINA --- */
+body {
+    font-family: sans-serif; /* Usando uma fonte simples e universal */
+    background-color: #f0f0f0; /* Um fundo cinza claro para a página */
+    /* Estas 3 linhas centralizam o nosso calendário perfeitamente no meio da tela */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 100% da altura da tela */
+    margin: 0; /* Remove margens padrão do navegador */
+}
+
+.container-calendario {
+    background-color: white; /* Fundo branco para o calendário */
+    padding: 20px; /* Espaço interno para não ficar tudo colado nas bordas */
+    border-radius: 8px; /* Bordas levemente arredondadas */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidade */
+    width: 400px; /* Largura fixa para o calendário */
+}
+
+/* Estilo para o cabeçalho (título do mês e botões) */
+header {
+    display: flex; /* Coloca os itens (título e botões) lado a lado */
+    justify-content: space-between; /* Empurra o título para um lado e os botões para o outro */
+    align-items: center; /* Alinha os itens verticalmente */
+    margin-bottom: 20px; /* Espaço abaixo do cabeçalho */
+}
+
+#titulo-mes-ano {
+    font-size: 24px;
+    margin: 0; /* Remove a margem padrão do h2 */
+}
+
+/* Estilo para os botões de navegação */
+.botoes-navegacao button {
+    padding: 5px 10px;
+    cursor: pointer; /* O mouse vira uma "mãozinha" */
+}
+
+/* --- ESTILO DA GRADE DO CALENDÁRIO --- */
+
+/* Estilo para a fileira com "D, S, T..." e para a grade dos dias */
+.dias-da-semana, .grade-dias-calendario {
+    display: grid; /* Ativa o layout de grade, perfeito para um calendário */
+    grid-template-columns: repeat(7, 1fr); /* Cria 7 colunas de larguras iguais */
+    gap: 5px; /* Um pequeno espaço entre cada dia */
+}
+
+/* Deixa o texto dos dias da semana em negrito */
+.dias-da-semana div {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Estilo para cada "célula" de dia individual */
+.dia {
+    text-align: center; /* Centraliza o número */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 50%; /* Deixa a célula redonda */
+    cursor: pointer; /* Indica que é clicável */
+    transition: background-color 0.2s; /* Animação suave ao passar o mouse */
+}
+
+.dia:hover {
+    background-color: #e9e9e9; /* Muda a cor de fundo ao passar o mouse */
+}
+
+/* Estilo para o dia de hoje */
+.dia-de-hoje {
+    background-color: #007bff; /* Fundo azul */
+    color: white; /* Texto branco */
+}
+
+/* Estilo para um dia marcado como "tomado" */
+.dia-tomado {
+    background-color: #28a745; /* Fundo verde */
+    color: white; /* Texto branco */
+}
+
+/* Estilo para um dia marcado como "pausa" */
+.dia-pausa {
+    background-color: #ffc107; /* Fundo amarelo */
+    color: #333; /* Texto escuro */
+}
+
+/* Estilo para os dias que não são do mês atual */
+.dia-outro-mes {
+    color: #cccccc; /* Cor cinza claro para indicar inatividade */
+    cursor: default; /* Mouse volta a ser uma seta */
+}
+
+/* --- ESTILO DA LEGENDA --- */
+.legenda {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.item-da-legenda {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cor-da-legenda {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ddd;
+}
+
+/* Usamos as mesmas classes de estado para que as cores batam */
+.cor-tomado {
+    background-color: #28a745;
+}
+.cor-pausa {
+    background-color: #ffc107;
+}
