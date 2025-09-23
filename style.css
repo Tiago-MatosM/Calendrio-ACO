@@ -153,3 +153,8 @@ header {
 .cor-pausa {
     background-color: var(--cor-pausa);
 }
+
+#botao-hoje {
+    font-weight: 600;
+    color: var(--cor-dia-hoje);
+}

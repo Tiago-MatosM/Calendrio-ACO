@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const containerDosDias = document.getElementById('container-dos-dias');
     const botaoAnterior = document.getElementById('botao-anterior');
     const botaoProximo = document.getElementById('botao-proximo');
+    const botaoHoje = document.getElementById('botao-hoje');
 
 
     let dataAtual = new Date();
@@ -91,6 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     botaoProximo.addEventListener('click', function() {
         dataAtual.setMonth(dataAtual.getMonth() + 1);
+        gerarCalendario();
+    });
+
+    botaoHoje.addEventListener('click', function() {
+        dataAtual = new Date();
         gerarCalendario();
     });
 
