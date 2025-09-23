@@ -1,8 +1,21 @@
+:root {
+  --cor-fundo-principal: #FCEFF5;
+  --cor-fundo-container: #ffffff;
+  --cor-texto-principal: #333333;
+  --cor-texto-secundario: #888888;
+  --cor-borda: #E0E0E0;
+  --cor-sombra: rgba(0, 0, 0, 0.1);
+  --cor-tomado: #E91E63;
+  --cor-pausa:  #03a9f4;
+  --cor-hover: #F5F5F5;
+  --cor-dia-hoje: #E91E63;
+  --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25); /* Cor do anel */
+}
 
 body {
-    font-family: sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
+    font-family: system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--cor-fundo-principal);
+    color: var(--cor-texto-principal);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,43 +23,44 @@ body {
     margin: 0;
 }
 
-
 .container-calendario {
-    background-color: #1a1a1a;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-    width: 400px;
-    /* borda para destacar o contêiner */
-    border: 1px solid #333;
+    background-color: var(--cor-fundo-container);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 20px var(--cor-sombra);
+    width: 95%;
+    max-width: 400px;
+    border: 1px solid var(--cor-borda);
 }
 
-/* Estilo para o cabeçalho (título do mês e botões) */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 #titulo-mes-ano {
-    font-size: 24px;
+    font-size: 22px;
+    font-weight: 600;
     margin: 0;
-    color: #e0e0e0;
 }
 
-
 .botoes-navegacao button {
-    padding: 5px 10px;
+    padding: 6px 14px;
     cursor: pointer;
-    background-color: #333; /* Fundo do botão */
-    color: #e0e0e0; /* Texto do botão */
-    border: 1px solid #555; /* Borda do botão */
-    border-radius: 4px;
+    background-color: transparent;
+    color: var(--cor-texto-principal);
+    border: 1px solid var(--cor-borda);
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.2s ease;
 }
 
 .botoes-navegacao button:hover {
-    background-color: #444; /* Efeito hover */
+    background-color: var(--cor-dia-hoje);
+    color: #FFFFFF;
+    border-color: var(--cor-dia-hoje);
 }
 
 .dias-da-semana, .grade-dias-calendario {
@@ -55,59 +69,64 @@ header {
     gap: 5px;
 }
 
-
-.dias-da-semana div {
-    font-weight: bold;
+.dias-da-semana abbr { 
+    font-weight: 600;
     text-align: center;
     margin-bottom: 10px;
-    color: #888;
+    color: var(--cor-texto-secundario);
+    font-size: 14px;
+    text-decoration: none;
 }
 
-/* Estilo para cada "célula" de dia individual */
 .dia {
-    text-align: center;
-    padding: 10px;
-    border-radius: 50%;
     cursor: pointer;
-    transition: background-color 0.2s, border 0.2s;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
 }
 
 .dia:hover {
-    background-color: #2c2c2c; /* Efeito hover mais sutil */
+    background-color: var(--cor-hover);
 }
 
-
-/* Estilo para o dia de hoje */
 .dia-de-hoje {
-    background-color: transparent; /* Sem fundo */
-    color: #ffffff; /* Texto branco para destaque */
-    /* borda branca para indicar o dia de hoje */
-    border: 2px solid white;
+    background-color: var(--cor-hover);
+    color: var(--cor-dia-hoje);
+    font-weight: 700;
+    box-shadow: 0 0 0 3px var(--cor-dia-hoje-transparente);
 }
 
-/* Estilo para um dia marcado como "tomado" */
-.dia-tomado {
-    background-color: #e91e63; /* Para: Rosa vibrante */
-    color: white; /* Texto branco */
-    border: none; /* Remove a borda para não conflitar com a cor */
+.dia.dia-tomado, .dia.dia-pausa {
+    border-radius: 50%;
+    color: #FFFFFF;
+    border: none;
+    font-weight: 600;
 }
 
-/* Estilo para um dia marcado como "pausa" */
-.dia-pausa {
-    background-color: #03a9f4; /* Para: Azul claro vibrante */
-    color: white; /* Texto branco */
-    border: none; /* Remove a borda */
+.dia.dia-tomado {
+    background-color: var(--cor-tomado);
 }
 
-/* Estilo para os dias que não são do mês atual */
+.dia.dia-pausa {
+    background-color: var(--cor-pausa);
+}
+
 .dia-outro-mes {
-    color: #444; /* Cor cinza mais escuro */
+    color: var(--cor-borda);
     cursor: default;
+    pointer-events: none;
 }
 
 
 .legenda {
-    margin-top: 20px;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid var(--cor-borda);
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -117,18 +136,20 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 13px;
+    color: var(--cor-texto-secundario);
 }
 
 .cor-da-legenda {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #555; /* Borda da legenda */
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
 }
-
 
 .cor-tomado {
-    background-color: #e91e63; /* Rosa */
+    background-color: var(--cor-tomado);
 }
+
 .cor-pausa {
-    background-color: #03a9f4; /* Azul claro */
+    background-color: var(--cor-pausa);
 }
