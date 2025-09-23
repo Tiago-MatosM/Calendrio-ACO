@@ -9,7 +9,7 @@
   --cor-pausa:  #03a9f4;
   --cor-hover: #F5F5F5;
   --cor-dia-hoje: #E91E63;
-  --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25); /* Cor do anel */
+  --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25);
 }
 
 body {
@@ -21,6 +21,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .container-calendario {
@@ -28,7 +30,7 @@ body {
     padding: 25px;
     border-radius: 16px;
     box-shadow: 0px 4px 20px var(--cor-sombra);
-    width: 95%;
+    width: 100%;
     max-width: 400px;
     border: 1px solid var(--cor-borda);
 
@@ -60,6 +62,7 @@ header {
     border-radius: 20px;
     font-size: 14px;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .botoes-navegacao button:hover {
@@ -168,7 +171,15 @@ header {
 #botao-hoje {
     font-weight: 600;
     color: var(--cor-dia-hoje);
+    margin: 0 5px;
 }
+
+@media (max-width: 420px) {}
+    header {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
 
 @keyframes fadeIn {
   from {
@@ -181,7 +192,7 @@ header {
   }
 }
 
-/* ANIMAÇÃO 2: Define como o efeito "pop" acontece */
+
 @keyframes popEffect {
   0% {
     transform: scale(1);
