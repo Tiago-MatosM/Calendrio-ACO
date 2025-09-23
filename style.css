@@ -31,6 +31,11 @@ body {
     width: 95%;
     max-width: 400px;
     border: 1px solid var(--cor-borda);
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 header {
