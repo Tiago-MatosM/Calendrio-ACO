@@ -1,19 +1,22 @@
 :root {
-  --cor-fundo-principal: #FCEFF5;
-  --cor-fundo-container: #ffffff;
-  --cor-texto-principal: #333333;
-  --cor-texto-secundario: #888888;
-  --cor-borda: #E0E0E0;
-  --cor-sombra: rgba(0, 0, 0, 0.1);
-  --cor-tomado: #E91E63;
-  --cor-pausa:  #03a9f4;
-  --cor-hover: #F5F5F5;
-  --cor-dia-hoje: #E91E63;
-  --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25);
+    --cor-fundo-principal: #FCEFF5;
+    --cor-fundo-container: #ffffff;
+    --cor-texto-principal: #333333;
+    --cor-texto-secundario: #888888;
+    --cor-borda: #E0E0E0;
+    --cor-sombra: rgba(0, 0, 0, 0.1);
+    --cor-tomado: #E91E63;
+    --cor-pausa: #03a9f4;
+    --cor-hover: #F5F5F5;
+    --cor-dia-hoje: #E91E63;
+    --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25);
+    --cor-indicador-anotacao: #FFC107;
 }
 
+
+   /* Estilos Gerais e Container*/
 body {
-    font-family: system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: var(--cor-fundo-principal);
     color: var(--cor-texto-principal);
     display: flex;
@@ -33,12 +36,14 @@ body {
     width: 100%;
     max-width: 400px;
     border: 1px solid var(--cor-borda);
-
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
+
+
+   /* Cabeçalho (Título e Botões)*/
 
 header {
     display: flex;
@@ -53,6 +58,11 @@ header {
     margin: 0;
 }
 
+.botoes-navegacao {
+    display: flex;
+    align-items: center;
+}
+
 .botoes-navegacao button {
     padding: 6px 14px;
     cursor: pointer;
@@ -65,12 +75,44 @@ header {
     white-space: nowrap;
 }
 
+#botao-hoje {
+    font-weight: 600;
+    color: var(--cor-dia-hoje);
+    margin: 0 5px;
+}
+
 .botoes-navegacao button:hover {
     background-color: var(--cor-dia-hoje);
     color: #FFFFFF;
     border-color: var(--cor-dia-hoje);
 }
 
+.theme-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--cor-fundo-container);
+    border: 1px solid var(--cor-borda);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.theme-button:hover {
+    transform: scale(1.1);
+    background-color: var(--cor-hover);
+}
+
+
+   /*Grade do Calendário (Dias)*/
 .dias-da-semana, .grade-dias-calendario {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -81,7 +123,7 @@ header {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-.dias-da-semana abbr { 
+.dias-da-semana abbr {
     font-weight: 600;
     text-align: center;
     margin-bottom: 10px;
@@ -100,14 +142,23 @@ header {
     border-radius: 50%;
     aspect-ratio: 1 / 1;
     padding: 0;
+    position: relative;
 }
 
-.dia:hover {
+/* Hover para dias NORMAIS (vazios) */
+.dia:not(.dia-tomado):not(.dia-pausa):not(.dia-de-hoje):hover {
     background-color: var(--cor-hover);
     transform: scale(1.1);
 }
 
-.dia-de-hoje {
+/* Hover para dias ESPECIAIS (já marcados) */
+.dia.dia-tomado:hover,
+.dia.dia-pausa:hover,
+.dia.dia-de-hoje:hover {
+    transform: scale(1.1);
+}
+
+.dia.dia-de-hoje {
     background-color: var(--cor-hover);
     color: var(--cor-dia-hoje);
     font-weight: 700;
@@ -136,7 +187,17 @@ header {
     pointer-events: none;
 }
 
+.dia-com-anotacao::before {
+    content: '●';
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 9px;
+    color: var(--cor-indicador-anotacao);
+}
 
+
+   /* Legenda e Dark Mode*/
 .legenda {
     margin-top: 25px;
     padding-top: 15px;
@@ -168,67 +229,6 @@ header {
     background-color: var(--cor-pausa);
 }
 
-#botao-hoje {
-    font-weight: 600;
-    color: var(--cor-dia-hoje);
-    margin: 0 5px;
-}
-
-@media (max-width: 420px) {}
-    header {
-        flex-direction: column;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-@keyframes popEffect {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.theme-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: var(--cor-fundo-container);
-    border: 1px solid var(--cor-borda);
-    border-radius: 50%;
-    width: 40px;
-    height: 36px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
-}
-
-.theme-button:hover {
-    transform: scale(1.1);
-    background-color: var(--cor-hover);
-}
-
 body.dark-mode {
     --cor-fundo-principal: #121212;
     --cor-fundo-container: #1E1E1E;
@@ -240,19 +240,22 @@ body.dark-mode {
     --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.4);
 }
 
+  /* 6. Estilos do Modal de Anotações*/
+
 .modal-container {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); 
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    z-index: 2000;
 }
 
 .modal-container.visible {
@@ -264,7 +267,7 @@ body.dark-mode {
     background-color: var(--cor-fundo-container);
     padding: 25px;
     border-radius: 16px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     width: 90%;
     max-width: 380px;
     display: flex;
@@ -305,8 +308,13 @@ body.dark-mode {
     border: 1px solid transparent;
 }
 
-.status-btn[data-status="dia-tomado"].active { background-color: var(--cor-tomado); }
-.status-btn[data-status="dia-pausa"].active { background-color: var(--cor-pausa); }
+.status-btn[data-status="dia-tomado"].active {
+    background-color: var(--cor-tomado);
+}
+
+.status-btn[data-status="dia-pausa"].active {
+    background-color: var(--cor-pausa);
+}
 
 textarea#note-input {
     min-height: 100px;
@@ -344,4 +352,41 @@ textarea#note-input {
     color: var(--cor-texto-secundario);
     font-weight: 600;
     cursor: pointer;
+}
+
+   /* Animações e Media Queries */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popEffect {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 420px) {
+    header {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .botoes-navegacao {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
