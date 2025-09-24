@@ -239,3 +239,109 @@ body.dark-mode {
     --cor-hover: #333333;
     --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.4);
 }
+
+.modal-container {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-container.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal {
+    background-color: var(--cor-fundo-container);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+}
+
+.modal-status {
+    display: flex;
+    gap: 10px;
+}
+
+.status-btn {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid var(--cor-borda);
+    background-color: transparent;
+    color: var(--cor-texto-secundario);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-btn:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-principal);
+}
+
+.status-btn.active {
+    color: #FFFFFF;
+    border: 1px solid transparent;
+}
+
+.status-btn[data-status="dia-tomado"].active { background-color: var(--cor-tomado); }
+.status-btn[data-status="dia-pausa"].active { background-color: var(--cor-pausa); }
+
+textarea#note-input {
+    min-height: 100px;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-fundo-principal);
+    color: var(--cor-texto-principal);
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#save-note-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--cor-dia-hoje);
+    color: #FFFFFF;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#cancel-btn {
+    padding: 8px 20px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--cor-texto-secundario);
+    font-weight: 600;
+    cursor: pointer;
+}

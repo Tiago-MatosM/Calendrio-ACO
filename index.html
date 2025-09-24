@@ -5,37 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Calendário</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <button id="theme-toggle" class="theme-button">🌙</button>
-    
+
     <div class="container-calendario">
 
         <header>
             <h2 id="titulo-mes-ano"></h2>
-
             <div class="botoes-navegacao">
                 <button id="botao-anterior">Anterior</button>
-                <button id="botao-hoje">Hoje</button> <button  id="botao-proximo">Próximo</button>
+                <button id="botao-hoje">Hoje</button>
+                <button id="botao-proximo">Próximo</button>
             </div>
         </header>
 
         <div class="dias-da-semana">
-            <div>D</div>
-            <div>S</div>
-            <div>T</div>
-            <div>Q</div>
-            <div>Q</div>
-            <div>S</div>
-            <div>S</div>
+            <abbr title="Domingo">D</abbr>
+            <abbr title="Segunda-feira">S</abbr>
+            <abbr title="Terça-feira">T</abbr>
+            <abbr title="Quarta-feira">Q</abbr>
+            <abbr title="Quinta-feira">Q</abbr>
+            <abbr title="Sexta-feira">S</abbr>
+            <abbr title="Sábado">S</abbr>
         </div>
 
         <div class="grade-dias-calendario" id="container-dos-dias">
-            </div>
+        </div>
 
         <div class="legenda">
             <div class="item-da-legenda">
@@ -48,7 +47,25 @@
             </div>
         </div>
 
-    </div> <script src="script.js"></script>
+    </div>
+
+    <div id="modal-container" class="modal-container">
+        <div class="modal">
+            <h3 id="modal-title">Anotação</h3>
+            <div class="modal-status">
+                <button class="status-btn" data-status="dia-tomado">Pílula Tomada</button>
+                <button class="status-btn" data-status="dia-pausa">Pausa</button>
+                <button class="status-btn" data-status="none">Nenhum</button>
+            </div>
+            <textarea id="note-input" placeholder="Escreva sua anotação aqui..."></textarea>
+            <div class="modal-actions">
+                <button id="save-note-btn">Salvar</button>
+                <button id="cancel-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
