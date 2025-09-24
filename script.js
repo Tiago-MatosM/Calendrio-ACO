@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const botaoAnterior = document.getElementById('botao-anterior');
     const botaoProximo = document.getElementById('botao-proximo');
     const botaoHoje = document.getElementById('botao-hoje');
+    const themeToggleButton = document.getElementById('theme-toggle');
 
 
     let dataAtual = new Date();
@@ -99,6 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
         dataAtual = new Date();
         gerarCalendario();
     });
+
+    themeToggleButton.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+
+        if (document.body.classList.contains('dark-mode')) {
+            themeToggleButton.innerHTML = '☀️';
+            } else {
+                themeToggleButton.innerHTML = '🌙';
+            }
+    });    
 
     gerarCalendario();
 
