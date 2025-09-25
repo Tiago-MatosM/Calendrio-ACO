@@ -11,6 +11,8 @@
     --cor-dia-hoje: #E91E63;
     --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.25);
     --cor-indicador-anotacao: #FFC107;
+    /* --- NOVA COR ADICIONADA --- */
+    --cor-periodo: #d946ef; /* Roxo/Magenta para o ciclo */
 }
 
 
@@ -183,14 +185,15 @@ header {
     position: relative;
 }
 
-.dia:not(.dia-tomado):not(.dia-pausa):not(.dia-de-hoje):hover {
+.dia:not(.dia-tomado):not(.dia-pausa):not(.dia-de-hoje):not(.dia-periodo):hover {
     background-color: var(--cor-hover);
     transform: scale(1.1);
 }
 
 .dia.dia-tomado:hover,
 .dia.dia-pausa:hover,
-.dia.dia-de-hoje:hover {
+.dia.dia-de-hoje:hover,
+.dia.dia-periodo:hover {
     transform: scale(1.1);
 }
 
@@ -201,7 +204,8 @@ header {
     box-shadow: 0 0 0 3px var(--cor-dia-hoje-transparente);
 }
 
-.dia.dia-tomado, .dia.dia-pausa {
+/* --- ALTERAÇÃO: Adicionado .dia-periodo --- */
+.dia.dia-tomado, .dia.dia-pausa, .dia.dia-periodo {
     border-radius: 50%;
     color: #FFFFFF;
     border: none;
@@ -209,13 +213,10 @@ header {
     animation: popEffect 0.3s ease-out;
 }
 
-.dia.dia-tomado {
-    background-color: var(--cor-tomado);
-}
-
-.dia.dia-pausa {
-    background-color: var(--cor-pausa);
-}
+.dia.dia-tomado { background-color: var(--cor-tomado); }
+.dia.dia-pausa { background-color: var(--cor-pausa); }
+/* --- NOVA REGRA --- */
+.dia.dia-periodo { background-color: var(--cor-periodo); }
 
 .dia-outro-mes {
     color: var(--cor-borda);
@@ -232,6 +233,12 @@ header {
     color: var(--cor-indicador-anotacao);
 }
 
+/* --- NOVA REGRA PARA DIAS DE PREVISÃO --- */
+.dia-previsao {
+    background-color: rgba(217, 70, 239, 0.2); /* Fundo roxo bem claro e transparente */
+    border-radius: 50%;
+}
+
 
 /* Legenda e Dark Mode*/
 .legenda {
@@ -241,6 +248,7 @@ header {
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap; /* Permite que a legenda quebre a linha se necessário */
 }
 
 .item-da-legenda {
@@ -257,14 +265,10 @@ header {
     border-radius: 50%;
 }
 
-.cor-tomado {
-    background-color: var(--cor-tomado);
-}
-
-.cor-pausa {
-    background-color: var(--cor-pausa);
-}
-
+.cor-tomado { background-color: var(--cor-tomado); }
+.cor-pausa { background-color: var(--cor-pausa); }
+/* --- NOVA REGRA --- */
+.cor-periodo { background-color: var(--cor-periodo); }
 
 .estatisticas-container {
     margin-top: 15px;
@@ -347,6 +351,7 @@ body.dark-mode {
 .modal-status {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
 }
 
 .status-btn {
@@ -370,13 +375,10 @@ body.dark-mode {
     border: 1px solid transparent;
 }
 
-.status-btn[data-status="dia-tomado"].active {
-    background-color: var(--cor-tomado);
-}
-
-.status-btn[data-status="dia-pausa"].active {
-    background-color: var(--cor-pausa);
-}
+.status-btn[data-status="dia-tomado"].active { background-color: var(--cor-tomado); }
+.status-btn[data-status="dia-pausa"].active { background-color: var(--cor-pausa); }
+/* --- NOVA REGRA --- */
+.status-btn[data-status="dia-periodo"].active { background-color: var(--cor-periodo); }
 
 textarea#note-input {
     min-height: 100px;

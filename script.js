@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const seletorMes = document.getElementById('seletor-mes');
     const seletorAno = document.getElementById('seletor-ano');
     const irParaDataBtn = document.getElementById('ir-para-data-btn');
-
-    // Seleciona os elementos das estatísticas
     const statTomadas = document.getElementById('stat-tomadas');
     const statPausa = document.getElementById('stat-pausa');
     const statAnotacoes = document.getElementById('stat-anotacoes');
@@ -40,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const primeiroDiaDaSemana = new Date(ano, mes, 1).getDay();
         const ultimoDiaDoMes = new Date(ano, mes + 1, 0).getDate();
 
+        const previsao = calcularCicloEPrever(); // Chama a função de previsão
+
         for (let i = 0; i < primeiroDiaDaSemana; i++) {
             containerDosDias.appendChild(document.createElement('div'));
         }
@@ -50,22 +50,33 @@ document.addEventListener('DOMContentLoaded', function() {
             divDia.classList.add('dia');
             const chaveData = ano + '-' + String(mes + 1).padStart(2, '0') + '-' + String(dia).padStart(2, '0');
             divDia.dataset.chave = chaveData;
+
             const hoje = new Date();
             if (dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()) {
                 divDia.classList.add('dia-de-hoje');
             }
+        
             const dayData = dadosSalvos[chaveData];
             if (dayData) {
-                if (dayData.state) divDia.classList.add(dayData.state);
-                if (dayData.note) divDia.classList.add('dia-com-anotacao');
+                if (dayData.periodo) {
+                    divDia.classList.add('dia-periodo');
+                } else if (dayData.pilula) {
+                    divDia.classList.add(dayData.pilula);
+                }
+                if (dayData.note) {
+                    divDia.classList.add('dia-com-anotacao');
+                }
             }
+            
+            if (previsao.proximoCiclo.includes(chaveData)) {
+                divDia.classList.add('dia-previsao');
+            }
+
             divDia.addEventListener('click', function() {
                 openModalForDay(chaveData);
             });
             containerDosDias.appendChild(divDia);
         }
-
-        // Chama a função para atualizar as estatísticas
         atualizarEstatisticas();
     }
     
@@ -75,13 +86,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const [ano, mes, dia] = chaveData.split('-');
         modalTitle.textContent = "Anotação para " + dia + "/" + mes + "/" + ano;
         noteInput.value = dayData.note || '';
-        for (let i = 0; i < statusButtons.length; i++) {
-            const btn = statusButtons[i];
+        
+        statusButtons.forEach(function(btn){
             btn.classList.remove('active');
-            if (btn.dataset.status === dayData.state) {
-                btn.classList.add('active');
-            }
+        });
+
+        if (dayData.pilula) {
+            document.querySelector(`.status-btn[data-status="${dayData.pilula}"]`).classList.add('active');
         }
+        if (dayData.periodo) {
+            document.querySelector('.status-btn[data-status="dia-periodo"]').classList.add('active');
+        }
+        
         modalContainer.classList.add('visible');
     }
 
@@ -91,20 +107,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleSaveNote() {
-        const activeStatusBtn = document.querySelector('.status-btn.active');
-        let state = 'none';
-        if (activeStatusBtn) { state = activeStatusBtn.dataset.status; }
         const note = noteInput.value.trim();
-        if (state === 'none' && !note) {
+        let pilulaStatus = null;
+        let periodoStatus = false;
+
+        statusButtons.forEach(function(btn) {
+            if (btn.classList.contains('active')) {
+                const status = btn.dataset.status;
+                if (status === 'dia-periodo') {
+                    periodoStatus = true;
+                } else if (status !== 'none' && status !== 'dia-periodo') {
+                    pilulaStatus = status;
+                }
+            }
+        });
+
+        if (!pilulaStatus && !periodoStatus && !note) {
             delete dadosSalvos[currentlyEditingKey];
         } else {
             dadosSalvos[currentlyEditingKey] = {
-                state: state !== 'none' ? state : null,
+                pilula: pilulaStatus,
+                periodo: periodoStatus,
                 note: note
             };
         }
         salvarDados();
-        gerarCalendario(); // Já chama a atualização de estatísticas
+        gerarCalendario();
         closeModal();
     }
 
@@ -147,21 +175,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function atualizarEstatisticas() {
         const anoAtual = dataAtual.getFullYear();
         const mesAtual = dataAtual.getMonth() + 1;
-
         let contagemTomadas = 0;
         let contagemPausa = 0;
         let contagemAnotacoes = 0;
-
         for (const chave in dadosSalvos) {
             const [ano, mes] = chave.split('-');
-
             if (parseInt(ano) === anoAtual && parseInt(mes) === mesAtual) {
                 const dayData = dadosSalvos[chave];
-                
-                if (dayData.state === 'dia-tomado') {
+                if (dayData.pilula === 'dia-tomado') { // ATUALIZADO
                     contagemTomadas++;
                 }
-                if (dayData.state === 'dia-pausa') {
+                if (dayData.pilula === 'dia-pausa') { // ATUALIZADO
                     contagemPausa++;
                 }
                 if (dayData.note) {
@@ -169,68 +193,88 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-
         statTomadas.textContent = contagemTomadas;
         statPausa.textContent = contagemPausa;
         statAnotacoes.textContent = contagemAnotacoes;
     }
 
+    function calcularCicloEPrever() {
+        const iniciosDeCiclo = [];
+        const todasAsChaves = Object.keys(dadosSalvos).sort();
+        
+        todasAsChaves.forEach(chave => {
+            if (dadosSalvos[chave].periodo) {
+                const data = new Date(chave + 'T12:00:00');
+                const diaAnterior = new Date(data);
+                diaAnterior.setDate(data.getDate() - 1);
+                const chaveAnterior = `${diaAnterior.getFullYear()}-${String(diaAnterior.getMonth() + 1).padStart(2, '0')}-${String(diaAnterior.getDate()).padStart(2, '0')}`;
+                if (!dadosSalvos[chaveAnterior] || !dadosSalvos[chaveAnterior].periodo) {
+                    iniciosDeCiclo.push(chave);
+                }
+            }
+        });
 
-    botaoAnterior.addEventListener('click', function() {
-        dataAtual.setMonth(dataAtual.getMonth() - 1);
-        gerarCalendario();
-    });
+        let duracaoMedia = 28;
+        if (iniciosDeCiclo.length >= 2) {
+            let somaDiferencas = 0;
+            for (let i = 1; i < iniciosDeCiclo.length; i++) {
+                const dataFim = new Date(iniciosDeCiclo[i] + 'T12:00:00');
+                const dataInicio = new Date(iniciosDeCiclo[i - 1] + 'T12:00:00');
+                const diferencaEmMs = dataFim - dataInicio;
+                const diferencaEmDias = Math.round(diferencaEmMs / (1000 * 60 * 60 * 24));
+                somaDiferencas += diferencaEmDias;
+            }
+            duracaoMedia = Math.round(somaDiferencas / (iniciosDeCiclo.length - 1));
+        }
+        
+        const previsao = { duracaoMedia: duracaoMedia, proximoCiclo: [] };
 
-    botaoProximo.addEventListener('click', function() {
-        dataAtual.setMonth(dataAtual.getMonth() + 1);
-        gerarCalendario();
-    });
+        if (iniciosDeCiclo.length > 0) {
+            const ultimoInicio = new Date(iniciosDeCiclo[iniciosDeCiclo.length - 1] + 'T12:00:00');
+            const proximoInicio = new Date(ultimoInicio);
+            proximoInicio.setDate(ultimoInicio.getDate() + duracaoMedia);
 
-    botaoHoje.addEventListener('click', function() {
-        dataAtual = new Date();
-        gerarCalendario();
-    });
-    
+            for (let i = 0; i < 5; i++) {
+                const diaPrevisto = new Date(proximoInicio);
+                diaPrevisto.setDate(proximoInicio.getDate() + i);
+                const chavePrevista = `${diaPrevisto.getFullYear()}-${String(diaPrevisto.getMonth() + 1).padStart(2, '0')}-${String(diaPrevisto.getDate()).padStart(2, '0')}`;
+                previsao.proximoCiclo.push(chavePrevista);
+            }
+        }
+        return previsao;
+    }
+
+    // --- EVENT LISTENERS ---
+    botaoAnterior.addEventListener('click', function() { dataAtual.setMonth(dataAtual.getMonth() - 1); gerarCalendario(); });
+    botaoProximo.addEventListener('click', function() { dataAtual.setMonth(dataAtual.getMonth() + 1); gerarCalendario(); });
+    botaoHoje.addEventListener('click', function() { dataAtual = new Date(); gerarCalendario(); });
     themeToggleButton.addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
-        if (document.body.classList.contains('dark-mode')) {
-            themeToggleButton.innerHTML = '☀️';
-        } else {
-            themeToggleButton.innerHTML = '🌙';
-        }
+        themeToggleButton.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
     });
-
     saveNoteBtn.addEventListener('click', handleSaveNote);
     cancelBtn.addEventListener('click', closeModal);
-    modalContainer.addEventListener('click', function(evento) {
-        if (evento.target === modalContainer) {
-            closeModal();
-        }
-    });
+    modalContainer.addEventListener('click', function(evento) { if (evento.target === modalContainer) { closeModal(); } });
     
-    for (let i = 0; i < statusButtons.length; i++) {
-        const btn = statusButtons[i];
+    statusButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
-            if (btn.classList.contains('active')) {
-                btn.classList.remove('active');
-                return;
+            const status = btn.dataset.status;
+            if (status === 'dia-tomado' || status === 'dia-pausa') {
+                const outroStatus = status === 'dia-tomado' ? 'dia-pausa' : 'dia-tomado';
+                document.querySelector(`.status-btn[data-status="${outroStatus}"]`).classList.remove('active');
             }
-            for (let j = 0; j < statusButtons.length; j++) {
-                statusButtons[j].classList.remove('active');
-            }
-            btn.classList.add('active');
+            btn.classList.toggle('active');
         });
-    }
+    });
 
     tituloMesAno.addEventListener('click', function() {
         seletorMes.value = dataAtual.getMonth();
         seletorAno.value = dataAtual.getFullYear();
         alternarVisualizacaoSeletor();
     });
-
     irParaDataBtn.addEventListener('click', irParaData);
 
-
+    // --- INICIALIZAÇÃO ---
     popularSeletores();
     gerarCalendario();
 });
