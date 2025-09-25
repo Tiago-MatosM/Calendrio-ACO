@@ -16,13 +16,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-btn');
     const statusButtons = document.querySelectorAll('.status-btn');
 
-    // Aqui guardamos os dados que mudam com o tempo.
+    // Elementos para a Seleção Rápida de Data
+    const seletorDataForm = document.getElementById('seletor-data-form');
+    const seletorMes = document.getElementById('seletor-mes');
+    const seletorAno = document.getElementById('seletor-ano');
+    const irParaDataBtn = document.getElementById('ir-para-data-btn');
 
+
+    // --- VARIÁVEIS DE ESTADO ---
     let dataAtual = new Date();
     let dadosSalvos = JSON.parse(localStorage.getItem('calendarioDados')) || {};
     let currentlyEditingKey = null;
 
 
+    // --- FUNÇÕES DO CALENDÁRIO E MODAL ---
     // Esta função desenha o calendário na tela. É a função mais importante.
     function gerarCalendario() {
         containerDosDias.innerHTML = '';
@@ -35,44 +42,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const primeiroDiaDaSemana = new Date(ano, mes, 1).getDay();
         const ultimoDiaDoMes = new Date(ano, mes + 1, 0).getDate();
 
-        // Cria os espaços vazios no início do mês
         for (let i = 0; i < primeiroDiaDaSemana; i++) {
             containerDosDias.appendChild(document.createElement('div'));
         }
 
-        // Cria um por um os dias do mês
         for (let dia = 1; dia <= ultimoDiaDoMes; dia++) {
             const divDia = document.createElement('div');
             divDia.textContent = dia;
             divDia.classList.add('dia');
-
             const chaveData = ano + '-' + String(mes + 1).padStart(2, '0') + '-' + String(dia).padStart(2, '0');
             divDia.dataset.chave = chaveData; 
-
-            // Verifica se é o dia de hoje
             const hoje = new Date();
             if (dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()) {
                 divDia.classList.add('dia-de-hoje');
             }
-        
-            // Pega os dados salvos para este dia específico
             const dayData = dadosSalvos[chaveData];
             if (dayData) {
-                // Se houver um estado (tomado/pausa), adiciona a classe de cor
                 if (dayData.state) {
                     divDia.classList.add(dayData.state);
                 }
-                // Se houver uma anotação, adiciona a classe do pontinho
                 if (dayData.note) {
                     divDia.classList.add('dia-com-anotacao');
                 }
             }
-
-            // Adiciona o evento de clique em cada dia para ABRIR o modal
             divDia.addEventListener('click', function() {
                 openModalForDay(chaveData);
             });
-
             containerDosDias.appendChild(divDia);
         }
     }
@@ -81,15 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function openModalForDay(chaveData) {
         currentlyEditingKey = chaveData;
         const dayData = dadosSalvos[chaveData] || {};
-
-        // Atualiza o título do modal
         const [ano, mes, dia] = chaveData.split('-');
         modalTitle.textContent = "Anotação para " + dia + "/" + mes + "/" + ano;
-
-        // Preenche a área de texto com a anotação salva
         noteInput.value = dayData.note || '';
-        
-        // Marca o botão de status correto (Pílula, Pausa ou Nenhum)
         for (let i = 0; i < statusButtons.length; i++) {
             const btn = statusButtons[i];
             btn.classList.remove('active');
@@ -97,8 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.add('active');
             }
         }
-        
-        // Torna o modal visível
         modalContainer.classList.add('visible');
     }
 
@@ -115,28 +102,60 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeStatusBtn) {
             state = activeStatusBtn.dataset.status;
         }
-        
         const note = noteInput.value.trim();
-
-        // Se o usuário limpou tudo (sem estado e sem nota), apagamos o registro do dia
         if (state === 'none' && !note) {
             delete dadosSalvos[currentlyEditingKey];
         } else {
-            // Caso contrário, salvamos o estado e a nota
             dadosSalvos[currentlyEditingKey] = {
                 state: state !== 'none' ? state : null,
                 note: note
             };
         }
-
-        salvarDados(); // Salva no localStorage
-        gerarCalendario(); // Redesenha o calendário para mostrar as mudanças
-        closeModal(); // Fecha o modal
+        salvarDados();
+        gerarCalendario();
+        closeModal();
     }
 
     // Função para salvar no localStorage
     function salvarDados() {
         localStorage.setItem('calendarioDados', JSON.stringify(dadosSalvos));
+    }
+
+    // --- NOVO: FUNÇÕES PARA O SELETOR DE DATA ---
+
+    // 1. Função para popular os menus <select> com meses e anos
+    function popularSeletores() {
+        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        seletorMes.innerHTML = '';
+        for (let i = 0; i < meses.length; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = meses[i];
+            seletorMes.appendChild(option);
+        }
+        const anoAtual = new Date().getFullYear();
+        seletorAno.innerHTML = '';
+        for (let i = anoAtual - 10; i <= anoAtual + 10; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            seletorAno.appendChild(option);
+        }
+    }
+
+    // 2. Função para mostrar ou esconder o formulário de seleção
+    function alternarVisualizacaoSeletor() {
+        tituloMesAno.classList.toggle('escondido');
+        seletorDataForm.classList.toggle('escondido');
+    }
+
+    // 3. Função para atualizar o calendário com a data escolhida
+    function irParaData() {
+        const novoMes = parseInt(seletorMes.value);
+        const novoAno = parseInt(seletorAno.value);
+        dataAtual = new Date(novoAno, novoMes, 1);
+        gerarCalendario();
+        alternarVisualizacaoSeletor(); // Esconde os seletores e mostra o título novamente
     }
 
     // Aqui dizemos o que fazer quando cada botão é clicado.
@@ -158,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     themeToggleButton.addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
-
         if (document.body.classList.contains('dark-mode')) {
             themeToggleButton.innerHTML = '☀️';
         } else {
@@ -171,11 +189,10 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelBtn.addEventListener('click', closeModal);
     modalContainer.addEventListener('click', function(evento) {
         if (evento.target === modalContainer) {
-            closeModal(); // Fecha o modal se o clique for no fundo escuro
+            closeModal();
         }
     });
     
-    // Evento para os botões de status (Pílula, Pausa, Nenhum)
     for (let i = 0; i < statusButtons.length; i++) {
         const btn = statusButtons[i];
         btn.addEventListener('click', function() {
@@ -183,15 +200,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.remove('active');
                 return;
             }
-            // Tira a classe 'active' de todos os outros botões
             for (let j = 0; j < statusButtons.length; j++) {
                 statusButtons[j].classList.remove('active');
             }
-            // Adiciona a classe 'active' apenas no botão que foi clicado
             btn.classList.add('active');
         });
     }
 
+    // NOVO: Event Listeners para o seletor de data
+    tituloMesAno.addEventListener('click', function() {
+        seletorMes.value = dataAtual.getMonth();
+        seletorAno.value = dataAtual.getFullYear();
+        alternarVisualizacaoSeletor();
+    });
+    irParaDataBtn.addEventListener('click', irParaData);
 
-    gerarCalendario(); // Chama a função principal para desenhar o calendário pela primeira vez.
+
+    popularSeletores();
+    gerarCalendario();
 });

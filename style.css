@@ -14,7 +14,7 @@
 }
 
 
-   /* Estilos Gerais e Container*/
+/* Estilos Gerais e Container*/
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: var(--cor-fundo-principal);
@@ -43,8 +43,7 @@ body {
 }
 
 
-   /* Cabeçalho (Título e Botões)*/
-
+/* Cabeçalho (Título e Botões)*/
 header {
     display: flex;
     justify-content: space-between;
@@ -52,11 +51,52 @@ header {
     margin-bottom: 25px;
 }
 
+
+#seletor-data-container {
+    flex-grow: 1;
+}
+
 #titulo-mes-ano {
     font-size: 22px;
     font-weight: 600;
     margin: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
+
+#titulo-mes-ano:hover {
+    color: var(--cor-dia-hoje);
+}
+
+#seletor-data-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.escondido {
+    display: none !important;
+}
+
+#seletor-data-form select {
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-fundo-principal);
+    color: var(--cor-texto-principal);
+    font-size: 14px;
+}
+
+#ir-para-data-btn {
+    padding: 7px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--cor-dia-hoje);
+    color: #FFFFFF;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 
 .botoes-navegacao {
     display: flex;
@@ -112,7 +152,7 @@ header {
 }
 
 
-   /*Grade do Calendário (Dias)*/
+/*Grade do Calendário (Dias)*/
 .dias-da-semana, .grade-dias-calendario {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -197,7 +237,7 @@ header {
 }
 
 
-   /* Legenda e Dark Mode*/
+/* Legenda e Dark Mode*/
 .legenda {
     margin-top: 25px;
     padding-top: 15px;
@@ -240,8 +280,7 @@ body.dark-mode {
     --cor-dia-hoje-transparente: rgba(233, 30, 99, 0.4);
 }
 
-  /* 6. Estilos do Modal de Anotações*/
-
+/* 6. Estilos do Modal de Anotações*/
 .modal-container {
     position: fixed;
     top: 0;
@@ -354,8 +393,7 @@ textarea#note-input {
     cursor: pointer;
 }
 
-   /* Animações e Media Queries */
-
+/* Animações e Media Queries */
 @keyframes fadeIn {
     from {
         opacity: 0;

@@ -15,7 +15,17 @@
     <div class="container-calendario">
 
         <header>
-            <h2 id="titulo-mes-ano"></h2>
+            
+            <div id="seletor-data-container">
+                <h2 id="titulo-mes-ano" title="Clique para selecionar outra data"></h2>
+
+                <div id="seletor-data-form" class="escondido">
+                    <select id="seletor-mes"></select>
+                    <select id="seletor-ano"></select>
+                    <button id="ir-para-data-btn">Ir</button>
+                </div>
+            </div>
+            
             <div class="botoes-navegacao">
                 <button id="botao-anterior">Anterior</button>
                 <button id="botao-hoje">Hoje</button>
