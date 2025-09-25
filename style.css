@@ -51,7 +51,6 @@ header {
     margin-bottom: 25px;
 }
 
-
 #seletor-data-container {
     flex-grow: 1;
 }
@@ -96,7 +95,6 @@ header {
     font-weight: 600;
     cursor: pointer;
 }
-
 
 .botoes-navegacao {
     display: flex;
@@ -185,13 +183,11 @@ header {
     position: relative;
 }
 
-/* Hover para dias NORMAIS (vazios) */
 .dia:not(.dia-tomado):not(.dia-pausa):not(.dia-de-hoje):hover {
     background-color: var(--cor-hover);
     transform: scale(1.1);
 }
 
-/* Hover para dias ESPECIAIS (já marcados) */
 .dia.dia-tomado:hover,
 .dia.dia-pausa:hover,
 .dia.dia-de-hoje:hover {
@@ -267,6 +263,33 @@ header {
 
 .cor-pausa {
     background-color: var(--cor-pausa);
+}
+
+
+.estatisticas-container {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--cor-borda);
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-item span {
+    font-size: 12px;
+    color: var(--cor-texto-secundario);
+}
+
+.stat-item strong {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
 }
 
 body.dark-mode {
